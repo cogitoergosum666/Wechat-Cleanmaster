@@ -5,7 +5,9 @@ import shutil
 
 import platform
 
-def work():
+def work(Msgattach_dir = None):
+    if Msgattach_dir != None:
+        os.chdir(Msgattach_dir)
     print("当前python版本是" + str(platform.python_version()))
     fileList_unfilter=os.listdir('.')
     filelist = []
@@ -56,5 +58,6 @@ def work():
 if __name__ == '__main__':
     print("微信缓存要你命1000系统已经启动，鲨！")
     print("本脚本还在测试阶段，请谨慎使用")
-    filedest,filecount = work()
+    msgattach_dir = input("请键入微信msgattach路径，如缺省则默认本文件已经在msgattach目录下")
+    filedest,filecount = work(msgattach_dir)
     print(str(filecount) + "个文件已经存入当前目录下"+filedest+"文件夹，其余项目清理完毕")
