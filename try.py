@@ -4,6 +4,11 @@ import time
 import shutil
 
 import platform
+from progress.bar import Bar
+
+
+
+
 
 def work(Msgattach_dir = None):
     if Msgattach_dir != None:
@@ -18,6 +23,7 @@ def work(Msgattach_dir = None):
 
     filedest = 'File_'+ time.strftime("%Y-%m-%d",time1)
     filecount = 0
+    bar = Bar('Processing',max = len(filelist))
     try:
         os.mkdir(filedest)
     except:
@@ -51,7 +57,8 @@ def work(Msgattach_dir = None):
             os.chdir('../..')
             #print(os.listdir())
             os.system('rd '+ name + '/S /Q')
-
+        bar.next()
+    bar.finish()
     return filedest,filecount
 
 
