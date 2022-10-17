@@ -6,8 +6,34 @@ import shutil
 import platform
 from progress.bar import Bar
 
+'''
+文件夹计算大小函数参考了：https://blog.csdn.net/w55100/article/details/92081182
+'''
+def getdirsize(dir):
+   size = 0
+   for root, dirs, files in os.walk(dir):
+      size += sum([os.path.getsize(os.path.join(root, name)) for name in files])
+   return size
+ 
+#dirpath = '/aaa/bbb/'
+# sz = getdirsize(dirpath)
+# print(sz)
 
-
+def checksize(filename,returnvalue = 'mb'):
+    current_path = os.getcwd()
+    file_path = os.path.join(current_path,filename)
+    size_byte = getdirsize(file_path)#os.path.getsize(file_path)
+    size_kb = size_byte/1024
+    size_mb = size_kb/1024
+    size_gb = size_mb/1024
+    if returnvalue == 'mb':#预备了不同的输出接口
+        return size_mb,'MB'
+    elif returnvalue == 'byte':
+        return size_byte,'B'
+    elif returnvalue == 'kb':
+        return size_kb,'KB'
+    elif returnvalue == 'gb':
+        return size_gb,'GB'
 
 
 def work(Msgattach_dir = None):
@@ -28,6 +54,7 @@ def work(Msgattach_dir = None):
         os.mkdir(filedest)
     except:
         pass
+    sizecount = 0
     for name in filelist:
 
         #print(os.listdir())
@@ -36,7 +63,7 @@ def work(Msgattach_dir = None):
 
         if 'File' not in subfilelist:
             os.chdir('..')
-            
+            sizecount += checksize(name)[0]
             os.system('rd '+ name + '/S /Q')
             #os.remove(name)
         else:
@@ -56,15 +83,16 @@ def work(Msgattach_dir = None):
                 os.chdir('..')
             os.chdir('../..')
             #print(os.listdir())
+            sizecount += checksize(name)[0]
             os.system('rd '+ name + '/S /Q')
         bar.next()
     bar.finish()
-    return filedest,filecount
+    return filedest,filecount,sizecount
 
 
 if __name__ == '__main__':
-    print("微信缓存要你命1000系统已经启动，鲨！")
+    print("微信缓存要你命1500系统已经启动，鲨！")
     print("本脚本还在测试阶段，请谨慎使用")
-    msgattach_dir = input("请键入微信msgattach路径，如缺省则默认本文件已经在msgattach目录下")
-    filedest,filecount = work(msgattach_dir)
-    print(str(filecount) + "个文件已经存入当前目录下"+filedest+"文件夹，其余项目清理完毕")
+    msgattach_dir = input("请键入微信msgattach路径，如缺省则默认本文件已经在msgattach目录下：")
+    filedest,filecount,sizecount = work(msgattach_dir)
+    print(str(filecount) + "个文件已经存入当前目录下"+filedest+"文件夹，其余项目清理完毕,共清理{:.3f}MB大小的空间".format(sizecount))
