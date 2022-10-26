@@ -74,11 +74,13 @@ def work(Msgattach_dir = None):
                 file_received_list = os.listdir() #日期文件夹里面
                 if len(file_received_list) != 0: #如果里面有文件
                     for file in file_received_list:
-                        if os.path.exists('../../../'+filedest):
-                            time.sleep(1)#避免运行过快重名
-                            name1 = file.split('.')[0] + time.strftime("%Y-%m-%d-%H-%M-%S",time.localtime()) + '.'+ file.split('.')[-1]
-                            os.rename(file,name1)
-                        shutil.move(name1,'../../../'+filedest)#假如已经存在则...
+                        if os.path.exists(os.path.join('../../../',filedest,file)):
+                            # time.sleep(1)#避免运行过快重名
+                            # name1 = file.split('.')[0] + time.strftime("%Y-%m-%d-%H-%M-%S",time.localtime()) + '.'+ file.split('.')[-1]
+                            # os.rename(file,name1)
+                            continue
+                        else:
+                            shutil.move(file,'../../../'+filedest)#假如已经存在则...
                         filecount += 1
                 os.chdir('..')
             os.chdir('../..')
